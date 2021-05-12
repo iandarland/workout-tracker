@@ -1,6 +1,7 @@
 const express = require("express");
 const logger = require("morgan");
 const mongoose = require("mongoose");
+const path = require("path")
 
 const PORT = process.env.PORT || 3000;
 
@@ -14,9 +15,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use(express.static("public"));
+app.use(require("./routes"))
 
 mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/fitnessdb", { useNewUrlParser: true });
 
-app.get("/", (req, res) =>{
-    res.send("/public/index.html")
-})
+
+
+app.listen(PORT, () => {
+    console.log(`App running on port ${PORT}!`);
+  });
+  
