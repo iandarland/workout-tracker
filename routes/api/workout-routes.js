@@ -1,10 +1,19 @@
 const Workout = require("../../models/workout")
 const db = require("../../models");
+const { route } = require("../home-routes");
 
 const router = require("express").Router()
 
 router.get("/", (req, res) => {
-    db.Workout.find({})
+    db.Workout.aggregate([
+        { 
+            $addFields:{totalDuration:
+                {
+                    $sum:"$exercises.duration"
+                }
+            }
+        }
+      ])
     .then(dbWorkout => {
         res.json(dbWorkout);
       })
@@ -38,6 +47,25 @@ router.post("/", ({body}, res) =>{
       .catch(err => {
         res.json(err);
       });
+    
+})
+
+router.get("/range", (req, res) =>{
+    db.Workout.aggregate([
+        { 
+            $addFields:{totalDuration:
+                {
+                    $sum:"$exercises.duration"
+                }
+            }
+        }
+        ])
+    .then(dbWorkout => {
+        res.json(dbWorkout);
+        })
+        .catch(err => {
+        res.json(err);
+        });
 })
 
 module.exports = router
